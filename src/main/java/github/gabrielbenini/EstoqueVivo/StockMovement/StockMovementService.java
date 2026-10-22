@@ -89,6 +89,44 @@ public class StockMovementService {
         stockMovementRepository.delete(stockMovement);
     }
 
+    @Transactional
+    public StockMovementResponse registerExit(StockMovementRequest stockMovementRequest){
+
+        Product product = productRepository.findById(stockMovementRequest.productId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with this id"));
+
+        if (!Boolean.TRUE.equals(product.getActive())) {
+            throw new IllegalArgumentException("Cannot Register movement for an inactive product");
+        }
+
+        Integer previousQuantity = product.getQuantity();
+        Integer exitQuantity = stockMovementRequest.quantity();
+        Integer resultingQuantity = previousQuantity - exitQuantity;
+
+        if (exitQuantity == null || exitQuantity <= 0) {
+            throw new IllegalArgumentException(
+                    "Exit quantity must be greater than zero");
+        }
+
+        if (previousQuantity < exitQuantity){
+            throw new IllegalArgumentException("You dont have this quantity os products to exit");
+        }
+
+        product.setQuantity(resultingQuantity);
+
+        productRepository.save(product);
+
+        StockMovement stockMovement = stockMovementRequest.toEntity(product);
+
+        stockMovement.setType(MovementType.EXIT);
+        stockMovement.setPreviousQuantity(previousQuantity);
+        stockMovement.setResultingQuantity(resultingQuantity);
+
+        StockMovement savedMovement = stockMovementRepository.save(stockMovement);
+
+        return StockMovementResponse.fromEntity(savedMovement);
+    }
+
 
 
 }

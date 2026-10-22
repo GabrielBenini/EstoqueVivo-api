@@ -50,4 +50,10 @@ public class StockMovementController {
         stockMovementService.deleteMovement(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/exit")
+    public ResponseEntity<StockMovementResponse> registerExit(@Valid @RequestBody StockMovementRequest request) {
+        StockMovementResponse stockMovementResponse = stockMovementService.registerExit(request);
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponse);
+    }
 }
