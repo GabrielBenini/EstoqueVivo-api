@@ -22,7 +22,8 @@ public class ProductService {
     public ProductResponse createProduct(ProductRequest productRequest){
 
         Category category = categoryRepository.findById(productRequest.categoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada com o id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Categoria nao encontrada com o id " + productRequest.categoryId()));
 
         Product product = productRequest.toEntity(category);
         productRepository.save(product);
@@ -35,7 +36,6 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto nao encontrado com o id " + id));
 
-        productRepository.save(product);
         return ProductResponse.fromEntity(product);
     }
 
@@ -52,7 +52,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto nao encontrado com o id " + id));
 
-        Category category = categoryRepository.findById(product.getCategory().getId())
+        Category category = categoryRepository.findById(productRequest.categoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada com o id " + id));
 
         productRequest.updateEntity(product, category);

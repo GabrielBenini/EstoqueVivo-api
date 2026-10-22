@@ -20,7 +20,7 @@ public record StockMovementResponse(
                 stockMovement.getQuantity(),
                 stockMovement.getReason(),
                 stockMovement.getNotes(),
-                stockMovement.getUpdatedAt(),
+                stockMovement.getCreatedAt(),
                 stockMovement.getProduct().getId()
         );
     }

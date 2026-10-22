@@ -4,7 +4,9 @@ import github.gabrielbenini.EstoqueVivo.Product.Product;
 import github.gabrielbenini.EstoqueVivo.Product.ProductRepository;
 import github.gabrielbenini.EstoqueVivo.StockMovement.dtos.StockMovementRequest;
 import github.gabrielbenini.EstoqueVivo.StockMovement.dtos.StockMovementResponse;
+import github.gabrielbenini.EstoqueVivo.StockMovement.enums.MovementType;
 import github.gabrielbenini.EstoqueVivo.commons.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +19,34 @@ public class StockMovementService {
     private final StockMovementRepository stockMovementRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
     public StockMovementResponse createMovement(StockMovementRequest stockMovementRequest){
 
         Product product = productRepository.findById(stockMovementRequest.productId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + stockMovementRequest.productId()));
 
+        if (!Boolean.TRUE.equals(product.getActive())) {
+            throw new IllegalArgumentException(
+                    "Cannot Register movement for an inactive product"
+            );
+        }
+
+        Integer previousQuantity = product.getQuantity();
+        Integer quantity = stockMovementRequest.quantity();
+        Integer resultingQuantity = previousQuantity + quantity;
+
+        product.setQuantity(resultingQuantity);
+        productRepository.save(product);
+
         StockMovement stockMovement = stockMovementRequest.toEntity(product);
 
-        stockMovementRepository.save(stockMovement);
-        return StockMovementResponse.fromEntity(stockMovement);
+        stockMovement.setType(MovementType.ENTRY);
+        stockMovement.setPreviousQuantity(previousQuantity);
+        stockMovement.setResultingQuantity(resultingQuantity);
+
+        StockMovement savedMovement = stockMovementRepository.save(stockMovement);
+
+        return StockMovementResponse.fromEntity(savedMovement);
     }
 
     public StockMovementResponse findMovement(Long id){

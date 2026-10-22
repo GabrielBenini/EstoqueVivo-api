@@ -21,8 +21,6 @@ public record ProductRequest(
         BigDecimal costPrice,
         @NotNull(message = "Sale Price cannot be blank")
         BigDecimal salePrice,
-        @NotNull(message = "Quantity cannot be blank")
-        Integer quantity,
         @NotNull(message = "MinimumStock cannot be blank")
         Integer minimumStock,
         @NotNull(message = "Active cannot be blank")
@@ -41,7 +39,6 @@ public record ProductRequest(
         product.setBarcode(this.barcode);
         product.setCostPrice(this.costPrice);
         product.setSalePrice(this.salePrice);
-        product.setQuantity(this.quantity);
         product.setMinimumStock(this.minimumStock);
         product.setActive(this.active);
         product.setCategory(category);
@@ -56,7 +53,6 @@ public record ProductRequest(
         product.setBarcode(this.barcode);
         product.setCostPrice(this.costPrice);
         product.setSalePrice(this.salePrice);
-        product.setQuantity(this.quantity);
         product.setMinimumStock(this.minimumStock);
         product.setActive(this.active);
         product.setUpdatedAt(LocalDateTime.now());

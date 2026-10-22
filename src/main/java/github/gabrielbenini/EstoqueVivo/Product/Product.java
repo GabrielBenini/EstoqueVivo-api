@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "sale_price")
     private BigDecimal salePrice;
 
-    private Integer quantity;
+    private Integer quantity = 0;
 
     @Column(name = "minimum_stock")
     private Integer minimumStock;
