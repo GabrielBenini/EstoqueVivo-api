@@ -25,18 +25,12 @@ public class StockMovement {
 
     private Integer quantity;
 
-    @Column(name = "previous_quantity")
-    private Integer previousQuantity;
-
-    @Column(name = "resulting_quantity")
-    private Integer resultingQuantity;
-
     private String reason;
 
     private String notes;
 
     @Column(name = "create_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updtedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "product_id")
