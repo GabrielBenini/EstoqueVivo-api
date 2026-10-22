@@ -6,6 +6,8 @@ import github.gabrielbenini.EstoqueVivo.StockMovement.enums.MovementType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 public record StockMovementRequest(
         @NotNull(message = "Type cannot be null")
         MovementType type,
@@ -30,5 +32,14 @@ public record StockMovementRequest(
         stockMovement.setProduct(product);
 
         return stockMovement;
+    }
+
+    public void updateEntity(StockMovement stockMovement, Product product){
+        stockMovement.setType(this.type);
+        stockMovement.setQuantity(this.quantity);
+        stockMovement.setReason(this.reason);
+        stockMovement.setNotes(this.notes);
+        stockMovement.setUpdatedAt(LocalDateTime.now());
+        stockMovement.setProduct(product);
     }
 }

@@ -30,7 +30,7 @@ public class StockMovement {
     private String notes;
 
     @Column(name = "create_at")
-    private LocalDateTime updtedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "product_id")

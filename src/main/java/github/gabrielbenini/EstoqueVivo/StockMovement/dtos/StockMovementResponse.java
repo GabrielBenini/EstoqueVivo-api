@@ -9,7 +9,7 @@ public record StockMovementResponse(
         Integer quantity,
         String reason,
         String notes,
-        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
         Long productId
 ) {
 
@@ -20,7 +20,7 @@ public record StockMovementResponse(
                 stockMovement.getQuantity(),
                 stockMovement.getReason(),
                 stockMovement.getNotes(),
-                stockMovement.getUpdtedAt(),
+                stockMovement.getUpdatedAt(),
                 stockMovement.getProduct().getId()
         );
     }
