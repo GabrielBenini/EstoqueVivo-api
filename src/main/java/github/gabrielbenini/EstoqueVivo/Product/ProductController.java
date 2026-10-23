@@ -35,10 +35,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> findAllProducts(Pageable pageable){
+    public ResponseEntity<Page<ProductResponse>> findAllProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean active,
+            Pageable pageable
+    ) {
+        Page<ProductResponse> products =
+                productService.findWithFilters(name, categoryId, active, pageable);
 
-        Page<ProductResponse> productResponse = productService.findAllProducts(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(productResponse);
+        return ResponseEntity.ok(products);
     }
 
     @PutMapping("/{id}")

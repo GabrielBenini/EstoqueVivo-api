@@ -76,4 +76,14 @@ public class ProductService {
                 .map(ProductResponse::fromEntity)
                 .toList();
     }
+
+    public Page<ProductResponse> findWithFilters(
+            String name,
+            Long categoryId,
+            Boolean active,
+            Pageable pageable
+    ) {
+        return productRepository.findWithFilters(name, categoryId, active, pageable)
+                .map(ProductResponse::fromEntity);
+    }
 }
