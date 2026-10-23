@@ -128,5 +128,53 @@ public class StockMovementService {
     }
 
 
+    @Transactional
+    public StockMovementResponse registerAdjustment(
+            StockMovementRequest stockMovementRequest) {
+
+        Product product = productRepository.findById(
+                        stockMovementRequest.productId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found"));
+
+        if (!Boolean.TRUE.equals(product.getActive())) {
+            throw new IllegalArgumentException(
+                    "Cannot register movement for an inactive product");
+        }
+
+        if (stockMovementRequest.quantity() == null
+                || stockMovementRequest.quantity() < 0) {
+            throw new IllegalArgumentException(
+                    "Quantity must be zero or greater");
+        }
+
+        Integer previousQuantity = product.getQuantity();
+
+        Integer adjustmentQuantity = stockMovementRequest.quantity();
+
+        if (previousQuantity.equals(adjustmentQuantity)) {
+            throw new IllegalArgumentException(
+                    "The quantity is the same as the current stock");
+        }
+
+        Integer movementQuantity =
+                Math.abs(adjustmentQuantity - previousQuantity);
+
+        product.setQuantity(adjustmentQuantity);
+        productRepository.save(product);
+
+        StockMovement stockMovement =
+                stockMovementRequest.toEntity(product);
+
+        stockMovement.setType(MovementType.ADJUSTMENT);
+        stockMovement.setQuantity(movementQuantity);
+        stockMovement.setPreviousQuantity(previousQuantity);
+        stockMovement.setResultingQuantity(adjustmentQuantity);
+
+        StockMovement savedMovement =
+                stockMovementRepository.save(stockMovement);
+
+        return StockMovementResponse.fromEntity(savedMovement);
+    }
 
 }

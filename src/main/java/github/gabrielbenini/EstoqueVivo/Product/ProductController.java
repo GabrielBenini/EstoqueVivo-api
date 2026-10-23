@@ -53,4 +53,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductResponse>> findProductsWithLowStock(){
+
+        List<ProductResponse> productResponses = productService.findProductsWithLowStock();
+        return ResponseEntity.status(HttpStatus.OK).body(productResponses);
+    }
+
 }

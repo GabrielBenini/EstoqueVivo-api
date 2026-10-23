@@ -56,4 +56,10 @@ public class StockMovementController {
         StockMovementResponse stockMovementResponse = stockMovementService.registerExit(request);
         return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponse);
     }
+
+    @PostMapping("/adjust")
+    public ResponseEntity<StockMovementResponse> registerAdjustment(@Valid @RequestBody StockMovementRequest request){
+        StockMovementResponse stockMovementResponse = stockMovementService.registerAdjustment(request);
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponse);
+    }
 }

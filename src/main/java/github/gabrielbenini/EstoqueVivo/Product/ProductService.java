@@ -68,4 +68,12 @@ public class ProductService {
 
         productRepository.delete(product);
     }
+
+    public List<ProductResponse> findProductsWithLowStock(){
+
+        return productRepository.findProductsWithLowStock()
+                .stream()
+                .map(ProductResponse::fromEntity)
+                .toList();
+    }
 }
