@@ -1,6 +1,7 @@
 package github.gabrielbenini.EstoqueVivo.Category;
 
 import github.gabrielbenini.EstoqueVivo.Product.Product;
+import github.gabrielbenini.EstoqueVivo.Stock.Stock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +30,8 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
 }

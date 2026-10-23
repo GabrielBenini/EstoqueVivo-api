@@ -1,6 +1,7 @@
 package github.gabrielbenini.EstoqueVivo.StockMovement;
 
 import github.gabrielbenini.EstoqueVivo.Product.Product;
+import github.gabrielbenini.EstoqueVivo.Stock.Stock;
 import github.gabrielbenini.EstoqueVivo.StockMovement.enums.MovementType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,11 @@ public class StockMovement {
     @Column(name = "create_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
 }

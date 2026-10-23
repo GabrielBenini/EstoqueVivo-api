@@ -1,11 +1,11 @@
 package github.gabrielbenini.EstoqueVivo.Product;
 
 import github.gabrielbenini.EstoqueVivo.Category.Category;
+import github.gabrielbenini.EstoqueVivo.Stock.Stock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,5 +51,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
 
 }
