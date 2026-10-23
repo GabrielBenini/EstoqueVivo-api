@@ -2,6 +2,7 @@ package github.gabrielbenini.EstoqueVivo.StockMovement;
 
 import github.gabrielbenini.EstoqueVivo.Product.Product;
 import github.gabrielbenini.EstoqueVivo.Product.ProductRepository;
+import github.gabrielbenini.EstoqueVivo.Product.dtos.ProductResponse;
 import github.gabrielbenini.EstoqueVivo.StockMovement.dtos.StockMovementRequest;
 import github.gabrielbenini.EstoqueVivo.StockMovement.dtos.StockMovementResponse;
 import github.gabrielbenini.EstoqueVivo.StockMovement.enums.MovementType;
@@ -20,7 +21,7 @@ public class StockMovementService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public StockMovementResponse createMovement(StockMovementRequest stockMovementRequest){
+    public StockMovementResponse createMovement(StockMovementRequest stockMovementRequest) {
 
         Product product = productRepository.findById(stockMovementRequest.productId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + stockMovementRequest.productId()));
@@ -49,16 +50,16 @@ public class StockMovementService {
         return StockMovementResponse.fromEntity(savedMovement);
     }
 
-    public StockMovementResponse findMovement(Long id){
+    public StockMovementResponse findMovement(Long id) {
 
         StockMovement stockMovement = stockMovementRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Movement not found with this id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movement not found with this id"));
 
         stockMovementRepository.save(stockMovement);
         return StockMovementResponse.fromEntity(stockMovement);
     }
 
-    public List<StockMovementResponse> findAllMovements(){
+    public List<StockMovementResponse> findAllMovements() {
 
         return stockMovementRepository.findAll()
                 .stream()
@@ -66,13 +67,13 @@ public class StockMovementService {
                 .toList();
     }
 
-    public StockMovementResponse updateMovement(Long id, StockMovementRequest stockMovementRequest){
+    public StockMovementResponse updateMovement(Long id, StockMovementRequest stockMovementRequest) {
 
         StockMovement stockMovement = stockMovementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movement not found with this id"));
 
         Product product = productRepository.findById(stockMovementRequest.productId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Product not found with this id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with this id"));
 
         stockMovementRequest.updateEntity(stockMovement, product);
         StockMovement updatedMovement = stockMovementRepository.save(stockMovement);
@@ -81,7 +82,7 @@ public class StockMovementService {
 
     }
 
-    public void deleteMovement(Long id){
+    public void deleteMovement(Long id) {
 
         StockMovement stockMovement = stockMovementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movement not found with this id"));
@@ -90,7 +91,7 @@ public class StockMovementService {
     }
 
     @Transactional
-    public StockMovementResponse registerExit(StockMovementRequest stockMovementRequest){
+    public StockMovementResponse registerExit(StockMovementRequest stockMovementRequest) {
 
         Product product = productRepository.findById(stockMovementRequest.productId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with this id"));
@@ -108,7 +109,7 @@ public class StockMovementService {
                     "Exit quantity must be greater than zero");
         }
 
-        if (previousQuantity < exitQuantity){
+        if (previousQuantity < exitQuantity) {
             throw new IllegalArgumentException("You dont have this quantity os products to exit");
         }
 
@@ -175,6 +176,17 @@ public class StockMovementService {
                 stockMovementRepository.save(stockMovement);
 
         return StockMovementResponse.fromEntity(savedMovement);
+    }
+
+    public List<StockMovementResponse> findAllMovementsByProductId(Long productId) {
+
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        return stockMovementRepository.findAllByProductId(productId)
+                .stream()
+                .map(StockMovementResponse::fromEntity)
+                .toList();
     }
 
 }

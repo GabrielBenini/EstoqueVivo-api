@@ -62,4 +62,11 @@ public class StockMovementController {
         StockMovementResponse stockMovementResponse = stockMovementService.registerAdjustment(request);
         return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponse);
     }
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<StockMovementResponse>> findAllMovementsByProductId(@PathVariable("productId") Long productId) {
+
+        List<StockMovementResponse> stockMovementResponse = stockMovementService.findAllMovementsByProductId(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponse);
+    }
 }
