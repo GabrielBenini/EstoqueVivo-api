@@ -4,6 +4,8 @@ import github.gabrielbenini.EstoqueVivo.Product.dtos.ProductRequest;
 import github.gabrielbenini.EstoqueVivo.Product.dtos.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +35,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAllProducts(){
+    public ResponseEntity<Page<ProductResponse>> findAllProducts(Pageable pageable){
 
-        List<ProductResponse> productResponse = productService.findAllProducts();
+        Page<ProductResponse> productResponse = productService.findAllProducts(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(productResponse);
     }
 

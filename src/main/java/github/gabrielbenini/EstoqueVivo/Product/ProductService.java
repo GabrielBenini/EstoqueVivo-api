@@ -6,6 +6,8 @@ import github.gabrielbenini.EstoqueVivo.Product.dtos.ProductRequest;
 import github.gabrielbenini.EstoqueVivo.Product.dtos.ProductResponse;
 import github.gabrielbenini.EstoqueVivo.commons.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,12 +41,10 @@ public class ProductService {
         return ProductResponse.fromEntity(product);
     }
 
-    public List<ProductResponse> findAllProducts(){
+    public Page<ProductResponse> findAllProducts(Pageable pageable){
 
-        return productRepository.findAll()
-                .stream()
-                .map(ProductResponse::fromEntity)
-                .toList();
+        return productRepository.findAll(pageable)
+                .map(ProductResponse::fromEntity);
     }
 
     public ProductResponse updateProductById(Long id, ProductRequest productRequest){
